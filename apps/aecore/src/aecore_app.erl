@@ -23,6 +23,12 @@ start(_StartType, _StartArgs) ->
         false ->
             lager:error("Persisted chain has a different genesis block than "
                         ++ "the one being expected. Aborting", []),
+            case aehc_utils:hc_enabled() of
+                true ->
+                    lager:error("If you want to use hyperchains then backup your DB and start with a fresh DB");
+                false ->
+                    lager:error("If you used hyperchains before then backup your DB and start with a fresh DB")
+            end,
             {error, inconsistent_database}
     end.
 
